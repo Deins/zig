@@ -383,6 +383,9 @@ pub fn parse(cert: Certificate) ParseError!Parsed {
         try der.Element.parse(cert_bytes, version_elem.slice.end)
     else
         version_elem;
+    // print debug information in case specific certificate is not supported by zig
+    // quickfix is to find this certificate by serial number on your system, exporting back-up, and then deleting it from trusted-authority-store
+    errdefer std.log.err("Certificate.zig can't parse certificate with serial number: {}", .{std.fmt.fmtSliceHexUpper(cert.buffer[serial_number.slice.start..serial_number.slice.end])});
     // RFC 5280, section 4.1.2.3:
     // "This field MUST contain the same algorithm identifier as
     // the signatureAlgorithm field in the sequence Certificate."
